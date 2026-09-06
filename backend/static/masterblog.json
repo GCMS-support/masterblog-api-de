@@ -1,0 +1,285 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Masterblog API",
+    "description": "RESTful API for managing blog posts",
+    "version": "1.0.0"
+  },
+  "basePath": "/",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "tags": [
+    {
+      "name": "Post",
+      "description": "Blog post CRUD, search and sorting"
+    }
+  ],
+  "paths": {
+    "/api/posts": {
+      "get": {
+        "summary": "Return posts, optionally searched and sorted",
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "type": "string",
+            "description": "Case-insensitive search across title, content, author and date"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "type": "string",
+            "enum": [
+              "title",
+              "content",
+              "author",
+              "date"
+            ]
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Post"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid sorting option"
+          },
+          "500": {
+            "description": "Storage error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a post",
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "post",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewPost"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Post created",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          },
+          "400": {
+            "description": "Required field missing"
+          },
+          "500": {
+            "description": "Storage error"
+          }
+        }
+      }
+    },
+    "/api/posts/search": {
+      "get": {
+        "summary": "Search posts by title or content",
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "type": "string",
+            "description": "Search title, content, author and date"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Matching posts",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Post"
+              }
+            }
+          },
+          "500": {
+            "description": "Storage error"
+          }
+        }
+      }
+    },
+    "/api/posts/{post_id}": {
+      "put": {
+        "summary": "Update a post",
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "post",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/NewPost"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post updated",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          },
+          "404": {
+            "description": "Post not found"
+          },
+          "500": {
+            "description": "Storage error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a post",
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post deleted"
+          },
+          "404": {
+            "description": "Post not found"
+          },
+          "500": {
+            "description": "Storage error"
+          }
+        }
+      },
+      "get": {
+        "summary": "Return one post",
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post found",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          },
+          "404": {
+            "description": "Post not found"
+          },
+          "500": {
+            "description": "Storage error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "NewPost": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string",
+          "default": "Anonymous"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "YYYY-MM-DD"
+        }
+      },
+      "required": [
+        "title",
+        "content"
+      ]
+    },
+    "Post": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/NewPost"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      ]
+    }
+  }
+}
