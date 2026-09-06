@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masterblog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <main class="container">
+        <header class="hero">
+            <p class="eyebrow">Flask REST API</p>
+            <h1>Masterblog</h1>
+            <p>Beiträge erstellen, durchsuchen, sortieren und verwalten.</p>
+        </header>
+
+        <section class="panel" aria-labelledby="connection-title">
+            <h2 id="connection-title">API-Verbindung</h2>
+            <div class="input-row">
+                <label class="grow">Basis-URL
+                    <input type="url" id="api-base-url" value="http://127.0.0.1:5002/api" placeholder="http://127.0.0.1:5002/api">
+                </label>
+                <button type="button" onclick="loadPosts()">Beiträge laden</button>
+            </div>
+        </section>
+
+        <section class="panel" aria-labelledby="new-post-title">
+            <h2 id="new-post-title">Neuen Beitrag anlegen</h2>
+            <div class="form-grid">
+                <label>Titel<input type="text" id="post-title" placeholder="Titel" required></label>
+                <label>Autor<input type="text" id="post-author" placeholder="Name"></label>
+                <label>Datum<input type="date" id="post-date"></label>
+                <label class="full">Inhalt<textarea id="post-content" rows="4" placeholder="Beitragstext" required></textarea></label>
+            </div>
+            <button type="button" onclick="addPost()">Beitrag hinzufügen</button>
+        </section>
+
+        <section class="panel" aria-labelledby="filter-title">
+            <h2 id="filter-title">Suchen und sortieren</h2>
+            <div class="filter-row">
+                <label class="grow">Suchbegriff<input type="search" id="search-query" placeholder="Titel, Inhalt, Autor oder Datum"></label>
+                <label>Sortieren nach
+                    <select id="sort-field">
+                        <option value="">Standardreihenfolge</option>
+                        <option value="title">Titel</option>
+                        <option value="content">Inhalt</option>
+                        <option value="author">Autor</option>
+                        <option value="date">Datum</option>
+                    </select>
+                </label>
+                <label>Richtung
+                    <select id="sort-direction">
+                        <option value="asc">Aufsteigend</option>
+                        <option value="desc">Absteigend</option>
+                    </select>
+                </label>
+                <button type="button" onclick="loadPosts()">Anwenden</button>
+                <button type="button" class="secondary" onclick="resetFilters()">Zurücksetzen</button>
+            </div>
+        </section>
+
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+        <section id="post-container" class="post-grid" aria-label="Blogbeiträge"></section>
+    </main>
+
+    <script src="static/main.js"></script>
+</body>
+</html>
